@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.13)
+set(NAME matmul-tiled)
+set(SOURCES matmul-tiled.c input.h input_short.h)
+set(REPETITIONS 1)
+add_all_exe()

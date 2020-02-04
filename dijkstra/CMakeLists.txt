@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.13)
+set(NAME dijkstra)
+set(SOURCES dijkstra_small.c)
+set(REPETITIONS 1)
+add_all_exe()

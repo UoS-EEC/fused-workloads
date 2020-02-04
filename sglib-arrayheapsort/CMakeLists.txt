@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.13)
+set(NAME sglib-arrayheapsort)
+set(SOURCES main.c benchmark.h arraysort.c)
+set(TARGET_DEFS HEAP_SORT)
+add_all_exe()

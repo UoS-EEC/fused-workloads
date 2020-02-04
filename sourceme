@@ -1,0 +1,32 @@
+# Utility aliases to build and run fused in docker
+# Enable these commands by running
+#       source sourceme
+# in your shell.
+
+# ------ Docker setup ------
+export DOCKER_BUILDKIT=1
+FUSED_DOCKER_IMAGE=sivertism/fused-swdev # Replace this with 'local-fused-swdev' when building your own docker image
+
+# Build docker image
+alias build='docker build -t local-fused-swdev .'
+
+# Clean build folder
+alias clean="rm -r build/*"
+
+# ------ Building target software ------
+# Run these in the directory containing the build folder, e.g. in fused-workloads
+#
+
+RUN_AND_LINK_DIRS="docker run -v \${PWD}:/opt/src -v \${PWD}/build:/opt/src/build -it ${FUSED_DOCKER_IMAGE}"
+
+# Compile release build
+alias swcomp="${RUN_AND_LINK_DIRS} /bin/bash -c 'cd /opt/src/build; cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release; ninja;'"
+
+# Compile with debug flags and symbols
+alias swcompg="docker run -v \${PWD}:/opt/src -v \${PWD}/build:/opt/src/build -it ${FUSED_DOCKER_IMAGE} /bin/bash -c 'cd /opt/src/build; cmake .. -GNinja -DCMAKE_BUILD_TYPE=Debug; ninja;'"
+
+# Run CMAKE only
+alias swcompc="docker run -v \${PWD}:/opt/src -v \${PWD}/build:/opt/src/build -it ${FUSED_DOCKER_IMAGE} /bin/bash -c 'cd /opt/src/build; cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release;'"
+
+# Start interactive shell
+alias runi='docker run -v \${PWD}:/opt/src -p 51000:51000 -it ${FUSED_DOCKER_IMAGE} /bin/bash'

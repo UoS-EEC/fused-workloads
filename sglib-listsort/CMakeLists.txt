@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.13)
+set(NAME sglib-listsort)
+set(SOURCES listsort.c)
+set(REPETITIONS 30)
+add_all_exe()

@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.13)
+set(NAME newlib-log)
+set(SOURCES ef_log.c)
+set(REPETITIONS 5)
+add_all_exe()

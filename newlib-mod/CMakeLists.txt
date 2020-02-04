@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.13)
+set(NAME newlib-mod)
+set(SOURCES ef_mod.c)
+set(REPETITIONS 1000)
+add_all_exe()

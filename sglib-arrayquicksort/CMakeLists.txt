@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.13)
+set(NAME sglib-arrayquicksort)
+set(SOURCES main.c benchmark.h arraysort.c)
+set(TARGET_DEFS QUICK_SORT)
+add_all_exe()
