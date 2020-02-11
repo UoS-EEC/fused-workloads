@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 set(NAME sglib-dllist)
-set(SOURCES main.c benchmark.h dllist.c)
+set(SOURCES benchmark.h dllist.c)
+set(REPETITIONS 13)
 add_all_exe()

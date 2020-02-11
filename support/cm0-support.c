@@ -1,14 +1,15 @@
 #include <stdint.h>
 #include <string.h>
 #include "cm0-support.h"
+#include "fused.h"
 
 void indicate_begin() {
-   MONITOR = MONITOR_INDICATE_BEGIN;
+   SIMPLE_MONITOR = SIMPLE_MONITOR_INDICATE_BEGIN;
   ;}
 
 void indicate_end() {
-  //MONITOR = MONITOR_INDICATE_END;
-  MONITOR = MONITOR_KILL_SIM;
+  //SIMPLE_MONITOR = SIMPLE_MONITOR_INDICATE_END;
+  SIMPLE_MONITOR = SIMPLE_MONITOR_KILL_SIM;
   }
 
 void wait() {

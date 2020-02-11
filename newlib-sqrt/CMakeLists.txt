@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 set(NAME newlib-sqrt)
 set(SOURCES ef_sqrt.c)
-set(REPETITIONS 100)
+set(REPETITIONS 174)
 add_all_exe()

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 set(NAME newlib-exp)
 set(SOURCES ef_exp.c)
-set(REPETITIONS 5)
+set(REPETITIONS 21)
 add_all_exe()

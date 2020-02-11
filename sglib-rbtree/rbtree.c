@@ -54,7 +54,7 @@ int array[100] = {14, 66, 12, 41, 86, 69, 19, 77, 68, 38, 26, 42, 37, 23, 17,
 
 #include <stddef.h>
 
-#define HEAP_SIZE 1500
+#define HEAP_SIZE 1800
 static char heap[HEAP_SIZE];
 static void *heap_ptr;
 static void *heap_end;

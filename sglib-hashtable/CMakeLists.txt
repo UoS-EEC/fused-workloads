@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 set(NAME sglib-hashtable)
-set(SOURCES main.c benchmark.h hashtable.c)
+set(SOURCES benchmark.h hashtable.c)
+set(REPETITIONS 32)
 add_all_exe()

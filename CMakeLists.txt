@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
-#set(TARGET_ARCH "arm" CACHE STRING "Target architecture")
-set(TARGET_ARCH "msp430" CACHE STRING "Target architecture")
+set(TARGET_ARCH "arm" CACHE STRING "Target architecture")
+#set(TARGET_ARCH "msp430" CACHE STRING "Target architecture")
 set($ENV{FUSED_SW_TARGET_ARCH} ${TARGET_ARCH})
 
 message(STATUS "Compiling benchmarks for ${TARGET_ARCH}")
@@ -24,15 +24,15 @@ add_subdirectory(newlib-log)
 add_subdirectory(newlib-mod)
 add_subdirectory(newlib-sqrt)
 
-#add_subdirectory(sglib-arraybinsearch)
-#add_subdirectory(sglib-arrayheapsort)
-#add_subdirectory(sglib-arrayquicksort)
-#add_subdirectory(sglib-dllist)
-#add_subdirectory(sglib-hashtable)
-#add_subdirectory(sglib-listinsertsort)
+add_subdirectory(sglib-arraybinsearch)
+add_subdirectory(sglib-arrayheapsort)
+add_subdirectory(sglib-arrayquicksort)
+add_subdirectory(sglib-dllist)
+add_subdirectory(sglib-hashtable)
+add_subdirectory(sglib-listinsertsort)
 add_subdirectory(sglib-listsort)
-#add_subdirectory(sglib-queue)
-#add_subdirectory(sglib-rbtree)
+add_subdirectory(sglib-queue)
+add_subdirectory(sglib-rbtree)
 
 #add_subdirectory(nettle-sha256) # Too large mem footprint
 

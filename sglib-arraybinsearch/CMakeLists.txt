@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 set(NAME sglib-arraybinsearch)
-set(SOURCES main.c benchmark.h arraybinsearch.c)
+set(SOURCES benchmark.h arraybinsearch.c)
+set(REPETITIONS 50)
 add_all_exe()

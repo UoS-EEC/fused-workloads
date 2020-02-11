@@ -12,7 +12,7 @@ IF(NOT (TARGET_ARCH STREQUAL ""))
 ELSE()
   set(TARGET_ARCH "$ENV{__TARGET_ARCH}")
 ENDIF()
-set(TARGET_ARCH "msp430")
+set(TARGET_ARCH "arm")
 
 message(STATUS "finding ${TARGET_ARCH} compiler")
 IF(${TARGET_ARCH} STREQUAL "arm")

@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 set(NAME sglib-queue)
-set(SOURCES main.c benchmark.h queue.c)
+set(SOURCES benchmark.h queue.c)
+set(REPETITIONS 16)
 add_all_exe()

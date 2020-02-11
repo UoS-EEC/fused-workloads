@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 set(NAME fp)
 set(SOURCES fp.c)
-set(REPETITIONS 1)
+set(REPETITIONS 5)
 add_all_exe()

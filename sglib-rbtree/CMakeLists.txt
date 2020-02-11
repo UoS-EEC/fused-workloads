@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 set(NAME sglib-rbtree)
-set(SOURCES main.c benchmark.h rbtree.c)
+set(SOURCES benchmark.h rbtree.c)
+set(REPETITIONS 3)
 add_all_exe()
