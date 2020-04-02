@@ -1,197 +1,157 @@
+/******************************************************************************
+ * @file     startup_ARMCM0.c
+ * @brief    CMSIS-Core(M) Device Startup File for a Cortex-M0 Device
+ * @version  V2.0.2
+ * @date     15. November 2019
+ ******************************************************************************/
 /*
-    ChibiOS/RT - Copyright (C) 2006,2007,2008,2009,2010,
-                 2011,2012,2013 Giovanni Di Sirio.
-
-    This file is part of ChibiOS/RT.
-
-    ChibiOS/RT is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 3 of the License, or
-    (at your option) any later version.
-
-    ChibiOS/RT is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/**
- * @file    GCC/ARMCMx/STM32F0xx/vectors.c
- * @brief   Interrupt vectors for the STM32F0xx family.
+ * Copyright (c) 2009-2019 Arm Limited. All rights reserved.
  *
- * @defgroup ARMCMx_STM32F0xx_VECTORS STM32F0xx Interrupt Vectors
- * @ingroup ARMCMx_SPECIFIC
- * @details Interrupt vectors for the STM32F0xx family.
- * @{
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the License); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Modified 2020
+ * Copyright (c) 2020 University of Southampton.
  */
+
+#include <fused.h>
 #include "cm0-support.h"
-#include <stdint.h>
+#include "cm0.h"
 
-/**
- * @brief   Type of an IRQ vector.
- */
-typedef void (*irq_vector_t)(void);
+/*----------------------------------------------------------------------------
+  External References
+ *----------------------------------------------------------------------------*/
+extern unsigned char *__stack_high;
 
-/**
- * @brief   Type of a structure representing the whole vectors table.
- */
-typedef struct {
-  uint32_t *init_stack;
-  irq_vector_t reset_vector;
-  irq_vector_t nmi_vector;
-  irq_vector_t hardfault_vector;
-  irq_vector_t memmanage_vector;
-  irq_vector_t busfault_vector;
-  irq_vector_t usagefault_vector;
-  irq_vector_t vector1c;
-  irq_vector_t vector20;
-  irq_vector_t vector24;
-  irq_vector_t vector28;
-  irq_vector_t svcall_vector;
-  irq_vector_t debugmonitor_vector;
-  irq_vector_t vector34;
-  irq_vector_t pendsv_vector;
-  irq_vector_t systick_vector;
-  irq_vector_t vectors[32];
-} vectors_t;
+/*----------------------------------------------------------------------------
+  Internal References
+ *----------------------------------------------------------------------------*/
+void Default_Handler(void);
+void Reset_Handler(void);
 
-extern uint32_t __stack_high;
-extern void ResetHandler(void);
-extern void NMIVector(void);
-extern void HardFaultVector(void);
-extern void MemManageVector(void);
-extern void BusFaultVector(void);
-extern void UsageFaultVector(void);
-extern void Vector1C(void);
-extern void Vector20(void);
-extern void Vector24(void);
-extern void Vector28(void);
-extern void SVCallVector(void);
-extern void DebugMonitorVector(void);
-extern void Vector34(void);
-extern void PendSVVector(void);
-extern void SysTickVector(void);
-extern void Vector40(void);
-extern void Vector44(void);
-extern void Vector48(void);
-extern void Vector4C(void);
-extern void Vector50(void);
-extern void Vector54(void);
-extern void Vector58(void);
-extern void Vector5C(void);
-extern void Vector60(void);
-extern void Vector64(void);
-extern void Vector68(void);
-extern void Vector6C(void);
-extern void Vector70(void);
-extern void Vector74(void);
-extern void Vector78(void);
-extern void Vector7C(void);
-extern void Vector80(void);
-extern void Vector84(void);
-extern void Vector88(void);
-extern void Vector8C(void);
-extern void Vector90(void);
-extern void Vector94(void);
-extern void Vector98(void);
-extern void Vector9C(void);
-extern void VectorA0(void);
-extern void VectorA4(void);
-extern void VectorA8(void);
-extern void VectorAC(void);
-extern void VectorB0(void);
-extern void VectorB4(void);
-extern void VectorB8(void);
-extern void VectorBC(void);
+/*----------------------------------------------------------------------------
+  Exception / Interrupt Handler
+ *----------------------------------------------------------------------------*/
+extern void NMI_Handler(void);
+extern void HardFault_Handler(void);
+extern void SVC_Handler(void);
+extern void PendSV_Handler(void);
+extern void SysTick_Handler(void);
 
-/**
- * @brief   STM32 vectors table.
- */
-__attribute__((section(".vectors"), used)) vectors_t _vectors = {
-    &__stack_high,
-    _start,
-    NMIVector,
-    HardFaultVector,
-    MemManageVector,
-    BusFaultVector,
-    UsageFaultVector,
-    Vector1C,
-    Vector20,
-    Vector24,
-    Vector28,
-    SVCallVector,
-    DebugMonitorVector,
-    Vector34,
-    PendSVVector,
-    SysTickVector,
-    {Vector40, Vector44, Vector48, Vector4C, Vector50, Vector54, Vector58,
-     Vector5C, Vector60, Vector64, Vector68, Vector6C, Vector70, Vector74,
-     Vector78, Vector7C, Vector80, Vector84, Vector88, Vector8C, Vector90,
-     Vector94, Vector98, Vector9C, VectorA0, VectorA4, VectorA8, VectorAC,
-     VectorB0, VectorB4, VectorB8, VectorBC}};
+extern void Interrupt0_Handler(void);
+extern void Interrupt1_Handler(void);
+extern void Interrupt2_Handler(void);
+extern void Interrupt3_Handler(void);
+extern void Interrupt4_Handler(void);
+extern void Interrupt5_Handler(void);
+extern void Interrupt6_Handler(void);
+extern void Interrupt7_Handler(void);
+extern void Interrupt8_Handler(void);
+extern void Interrupt9_Handler(void);
 
-/**
- * @brief   Unhandled exceptions handler.
- * @details Any undefined exception vector points to this function by default.
- *          This function simply stops the system into an infinite loop.
- *
- * @notapi
- */
-__attribute__((naked)) void _unhandled_exception(void) {
+/* Exceptions */
+void NMI_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void HardFault_Handler(void) __attribute__((weak));
+void SVC_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void PendSV_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void SysTick_Handler(void) __attribute__((weak, alias("Default_Handler")));
 
+void Interrupt0_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void Interrupt1_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void Interrupt2_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void Interrupt3_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void Interrupt4_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void Interrupt5_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void Interrupt6_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void Interrupt7_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void Interrupt8_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void Interrupt9_Handler(void) __attribute__((weak, alias("Default_Handler")));
+
+/*----------------------------------------------------------------------------
+  Exception / Interrupt Vector table
+ *----------------------------------------------------------------------------*/
+
+//#if defined ( __GNUC__ )
+//#pragma GCC diagnostic push
+//#pragma GCC diagnostic ignored "-Wpedantic"
+//#endif
+
+extern VECTOR_TABLE_Type __VECTOR_TABLE[48];
+VECTOR_TABLE_Type __VECTOR_TABLE[48] __VECTOR_TABLE_ATTRIBUTE = {
+    (VECTOR_TABLE_Type)(&__stack_high), /*     Initial Stack Pointer */
+    Reset_Handler,                      /*     Reset Handler */
+    NMI_Handler,                        /* -14 NMI Handler */
+    HardFault_Handler,                  /* -13 Hard Fault Handler */
+    0,                                  /*     Reserved */
+    0,                                  /*     Reserved */
+    0,                                  /*     Reserved */
+    0,                                  /*     Reserved */
+    0,                                  /*     Reserved */
+    0,                                  /*     Reserved */
+    0,                                  /*     Reserved */
+    SVC_Handler,                        /*  -5 SVCall Handler */
+    0,                                  /*     Reserved */
+    0,                                  /*     Reserved */
+    PendSV_Handler,                     /*  -2 PendSV Handler */
+    SysTick_Handler,                    /*  -1 SysTick Handler */
+
+    /* Interrupts */
+    Interrupt0_Handler, /*   0 Interrupt 0 */
+    Interrupt1_Handler, /*   1 Interrupt 1 */
+    Interrupt2_Handler, /*   2 Interrupt 2 */
+    Interrupt3_Handler, /*   3 Interrupt 3 */
+    Interrupt4_Handler, /*   4 Interrupt 4 */
+    Interrupt5_Handler, /*   5 Interrupt 5 */
+    Interrupt6_Handler, /*   6 Interrupt 6 */
+    Interrupt7_Handler, /*   7 Interrupt 7 */
+    Interrupt8_Handler, /*   8 Interrupt 8 */
+    Interrupt9_Handler  /*   9 Interrupt 9 */
+                        /* Interrupts 10..31 are left out */
+};
+
+//#if defined ( __GNUC__ )
+//#pragma GCC diagnostic pop
+//#endif
+
+/*----------------------------------------------------------------------------
+  Reset Handler called on controller reset
+ *----------------------------------------------------------------------------*/
+__NO_RETURN void Reset_Handler(void) {
+  // SystemInit();                             /* CMSIS System Initialization */
+  //__PROGRAM_START();                        /* Enter PreMain (C library entry
+  // point) */
+  extern int main();
+  main();
+  SIMPLE_MONITOR = SIMPLE_MONITOR_SW_ERROR;
+  while (1)  // Should never get here
+    ;
+}
+
+/*----------------------------------------------------------------------------
+  Hard Fault Handler
+ *----------------------------------------------------------------------------*/
+void HardFault_Handler(void) {
+  SIMPLE_MONITOR = SIMPLE_MONITOR_SW_ERROR;
   while (1)
     ;
 }
 
-void NMIVector(void) __attribute__((weak, alias("_unhandled_exception")));
-void HardFaultVector(void) __attribute__((weak, alias("_unhandled_exception")));
-void MemManageVector(void) __attribute__((weak, alias("_unhandled_exception")));
-void BusFaultVector(void) __attribute__((weak, alias("_unhandled_exception")));
-void UsageFaultVector(void)
-    __attribute__((weak, alias("_unhandled_exception")));
-void Vector1C(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector20(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector24(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector28(void) __attribute__((weak, alias("_unhandled_exception")));
-void SVCallVector(void) __attribute__((weak, alias("_unhandled_exception")));
-void DebugMonitorVector(void)
-    __attribute__((weak, alias("_unhandled_exception")));
-void Vector34(void) __attribute__((weak, alias("_unhandled_exception")));
-void PendSVVector(void) __attribute__((weak, alias("_unhandled_exception")));
-void SysTickVector(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector40(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector44(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector48(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector4C(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector50(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector54(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector58(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector5C(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector60(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector64(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector68(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector6C(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector70(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector74(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector78(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector7C(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector80(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector84(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector88(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector8C(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector90(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector94(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector98(void) __attribute__((weak, alias("_unhandled_exception")));
-void Vector9C(void) __attribute__((weak, alias("_unhandled_exception")));
-void VectorA0(void) __attribute__((weak, alias("_unhandled_exception")));
-void VectorA4(void) __attribute__((weak, alias("_unhandled_exception")));
-void VectorA8(void) __attribute__((weak, alias("_unhandled_exception")));
-void VectorAC(void) __attribute__((weak, alias("_unhandled_exception")));
-void VectorB0(void) __attribute__((weak, alias("_unhandled_exception")));
-void VectorB4(void) __attribute__((weak, alias("_unhandled_exception")));
-void VectorB8(void) __attribute__((weak, alias("_unhandled_exception")));
-void VectorBC(void) __attribute__((weak, alias("_unhandled_exception")));
-
+/*----------------------------------------------------------------------------
+  Default Handler for Exceptions / Interrupts
+ *----------------------------------------------------------------------------*/
+void Default_Handler(void) {
+  SIMPLE_MONITOR = SIMPLE_MONITOR_SW_ERROR;
+  while (1)
+    ;
+}

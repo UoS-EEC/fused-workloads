@@ -1,7 +1,8 @@
-#pragma once
+/*
+ * Copyright (c) 2019-2020, University of Southampton and Contributors.
+ * All rights reserved.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
 
-void target_init();
-void wait();
-void indicate_begin();
-void indicate_end();
-void _start();
+#pragma once

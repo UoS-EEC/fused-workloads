@@ -1,17 +1,56 @@
-#include "msp430-support.h"
+/*
+ * Copyright (c) 2019-2020, University of Southampton and Contributors.
+ * All rights reserved.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+#include <msp430fr5994.h>
 #include <stdint.h>
 #include <string.h>
+#include "support.h"
+
+#ifdef SIMULATION
+#include <fused.h>
+#endif
+
+#if TEXT_IN_SRAM && DATA_IN_SRAM
+#define FRAM_WAIT_MULT 4
+#elif TEXT_IN_SRAM
+#define FRAM_WAIT_MULT (4 - FRAM_WAIT / 8)
+#elif DATA_IN_SRAM
+#define FRAM_WAIT_MULT (4 - FRAM_WAIT / 8)
+#else
+#define FRAM_WAIT_MULT (4 - FRAM_WAIT / 8)
+#endif
 
 void gpio_init();
 void cs_init();
 
-void indicate_begin() { P1OUT |= BIT2; }
-void indicate_end() { P1OUT &= ~BIT2; }
+void indicate_workload_begin() {
+  P1OUT |= BIT2;
+#ifdef SIMULATION
+  SIMPLE_MONITOR = SIMPLE_MONITOR_INDICATE_BEGIN;
+#endif
+}
+void indicate_workload_end() {
+  P1OUT &= ~BIT2;
+#ifdef SIMULATION
+  SIMPLE_MONITOR = SIMPLE_MONITOR_INDICATE_END;
+#endif
+}
+
+void end_experiment() {
+#ifdef SIMULATION
+  SIMPLE_MONITOR = SIMPLE_MONITOR_KILL_SIM;
+#endif
+  while (1)
+    ;
+}
 
 void wait() {
-
   for (volatile uint32_t i = 0; i < FRAM_WAIT_MULT * 10000ll; i++)
-    ; // delay
+    ;  // delay
 }
 
 void target_init() {
@@ -20,11 +59,11 @@ void target_init() {
 }
 
 __attribute__((optimize(0))) void cs_init() {
-  CSCTL0_H = 0xA5;           // Unlock CS
-  FRCTL0_H = 0xA5;           // Unlock FRAM ctrl
-  FRCTL0_L = FRAM_WAIT << 4; // wait states
+  CSCTL0_H = 0xA5;            // Unlock CS
+  FRCTL0_H = 0xA5;            // Unlock FRAM ctrl
+  FRCTL0_L = FRAM_WAIT << 4;  // wait states
 
-  CSCTL1 = DCORSEL | DCOFSEL_4; // 16 MHz
+  CSCTL1 = DCORSEL | DCOFSEL_4;  // 16 MHz
 
   // Set ACLK = VLO; MCLK = DCO; SMCLK = DCO
   CSCTL2 = SELA_1 + SELS_3 + SELM_3;
@@ -35,13 +74,13 @@ __attribute__((optimize(0))) void cs_init() {
 
 void gpio_init() {
   // Need to initialize all ports/pins to reduce power consump'n
-  P1OUT = 0; // LEDs on P1.0 and P1.1
+  P1OUT = 0;  // LEDs on P1.0 and P1.1
   P1DIR = 0xff;
   P2OUT = 0;
   P2DIR = 0xff;
   P3OUT = 0;
   P3DIR = 0xff;
-  P4OUT = BIT0; // Pull-up on board
+  P4OUT = BIT0;  // Pull-up on board
   P4DIR = 0xff;
   P6OUT = 0;
   P6DIR = 0xff;
@@ -68,8 +107,8 @@ __attribute__((interrupt(RESET_VECTOR), naked, used, optimize(0),
 _start() {
   extern uint8_t __stack_low, __stack_high;
   WDTCTL = (WDTPW | WDTHOLD);
-  __set_SP_register(&__stack_high); // Set SP
-  __bic_SR_register(GIE);           // Disable interrupts during boot
+  __set_SP_register(&__stack_high);  // Set SP
+  __bic_SR_register(GIE);            // Disable interrupts during boot
 
   register uint16_t *dst __attribute__((unused));
   register uint16_t *src __attribute__((unused));

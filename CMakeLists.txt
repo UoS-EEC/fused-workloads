@@ -1,17 +1,48 @@
+#
+# Copyright (c) 2013-2020, University of Southampton and Contributors.
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
 cmake_minimum_required(VERSION 3.10)
 
-set(TARGET_ARCH "arm" CACHE STRING "Target architecture")
-#set(TARGET_ARCH "msp430" CACHE STRING "Target architecture")
-set($ENV{FUSED_SW_TARGET_ARCH} ${TARGET_ARCH})
+# ------ Options -------
+option(SIMULATION "Enable fused simulation control (via SIMPLE_MONITOR)" ON)
+option(INSTALL_DEPENDENCIES "Download, build & install dependencies only" OFF)
 
-message(STATUS "Compiling benchmarks for ${TARGET_ARCH}")
+# ------ Optionally install target toolchains ------
+
+set(EP_INSTALL_DIR $ENV{HOME}/.local CACHE STRING
+                "Installation directory for dependencies")
+
+IF(INSTALL_DEPENDENCIES)
+  # Install dependencies and exit
+  project(INSTALL_DEPENDENCIES NONE)
+  include(cmake/InstallDependencies.cmake)
+  return()
+ENDIF()
+
+# ------ Set CMAKE toolchain ------
+IF(NOT DEFINED TARGET_ARCH)
+  message(FATAL_ERROR
+    "TARGET_ARCH undefined, must be one of {cm0, msp430}")
+ENDIF()
+IF(${TARGET_ARCH} STREQUAL "cm0")
+  set(CMAKE_TOOLCHAIN_FILE cmake/cm0-toolchain.cmake)
+ELSEIF(${TARGET_ARCH} STREQUAL "msp430")
+  set(CMAKE_TOOLCHAIN_FILE cmake/msp430-toolchain.cmake)
+ELSE ()
+  message(FATAL_ERROR
+    "Invalid TARGET_ARCH ${TARGET_ARCH}, must be one of {cm0, msp430}")
+ENDIF()
+
+# ------ Project ------
+project(workloads)
+
+include(cmake/common.cmake)
 
 set(PROJECT_ROOT ${CMAKE_CURRENT_LIST_DIR})
-
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/toolchain.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/common.cmake)
-
-project(benchmarks)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(.)
@@ -32,7 +63,7 @@ add_subdirectory(sglib-hashtable)
 add_subdirectory(sglib-listinsertsort)
 add_subdirectory(sglib-listsort)
 add_subdirectory(sglib-queue)
-add_subdirectory(sglib-rbtree)
+#add_subdirectory(sglib-rbtree) # Too large mem footprint
 
 #add_subdirectory(nettle-sha256) # Too large mem footprint
 

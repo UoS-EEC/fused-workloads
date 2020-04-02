@@ -1,3 +1,10 @@
+#
+# Copyright (c) 2019-2020, University of Southampton and Contributors.
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
 cmake_minimum_required(VERSION 3.13)
 
 # Commmon function to add linker script and definitions for each target
@@ -7,32 +14,22 @@ string(COMPARE EQUAL ${DATASEC} S DATA_IN_SRAM)
 
 target_compile_definitions(
   ${TESTNAME}
-  PRIVATE -DFRAM_WAIT=${WS}
-  PRIVATE -DTEXT_IN_SRAM=${TEXT_IN_SRAM}
-  PRIVATE -DDATA_IN_SRAM=${DATA_IN_SRAM}
-  PRIVATE -DREPETITIONS=${REPETITIONS}
+  PUBLIC -DFRAM_WAIT=${WS}
+  PUBLIC -DTEXT_IN_SRAM=${TEXT_IN_SRAM}
+  PUBLIC -DDATA_IN_SRAM=${DATA_IN_SRAM}
+  PUBLIC -DREPETITIONS=${REPETITIONS}
   )
 
 target_link_libraries(${TESTNAME} PUBLIC support ${SUPPORT_LIBS})
 
-IF (${TARGET_ARCH} STREQUAL "arm")
-  target_compile_definitions(${TESTNAME} PUBLIC -DCM0_ARCH)
-ELSEIF (${TARGET_ARCH} STREQUAL "msp430")
-  target_compile_definitions(${TESTNAME} PUBLIC -DMSP430_ARCH)
-ENDIF()
-
 # Add correct linker script depending on section allocations
 IF(${TARGET_ARCH} STREQUAL "msp430")
   target_link_options(${TESTNAME}
-    PUBLIC -T${PROJECT_ROOT}/support/msp430fr5994-${CODESEC}${DATASEC}.ld)
-ELSEIF (${TARGET_ARCH} STREQUAL "arm")
-  target_link_options(${TESTNAME} PUBLIC -T${PROJECT_ROOT}/support/cm0-FS.ld)
-ELSE()
-  message(ERROR "Invalid TARGET_ARCH: ${TARGET_ARCH}")
+    PUBLIC -T${CMAKE_CURRENT_LIST_DIR}/../support/msp430fr5994-${CODESEC}${DATASEC}.ld)
+ELSEIF (${TARGET_ARCH} STREQUAL "cm0")
+  target_link_options(${TESTNAME}
+    PUBLIC -T${CMAKE_CURRENT_LIST_DIR}/../support/cm0.ld)
 ENDIF()
-
-# Link support libs
-#target_link_libraries( ${TESTNAME} ${SUPPORT_LIBS})
 
 set_target_properties(${TESTNAME} PROPERTIES SUFFIX ".elf")
 
