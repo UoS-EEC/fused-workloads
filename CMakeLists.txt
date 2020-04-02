@@ -11,12 +11,22 @@ cmake_minimum_required(VERSION 3.10)
 option(SIMULATION "Enable fused simulation control (via SIMPLE_MONITOR)" ON)
 option(INSTALL_DEPENDENCIES "Download, build & install dependencies only" OFF)
 
+IF(${SIMULATION})
+  IF(NOT EXISTS $ENV{FUSED_ROOT}/include/fused.h)
+    message(FATAL_ERROR "SIMULATION set, but can't find "
+      "\$ENV{FUSED_ROOT}/include/fused.h, is the environment variable "
+      "FUSED_ROOT set correctly? If building without Fused, set SIMULATION=OFF "
+      " (-D SIMULATION=OFF)"
+      )
+  ENDIF()
+ENDIF()
+
 # ------ Optionally install target toolchains ------
 
 set(EP_INSTALL_DIR $ENV{HOME}/.local CACHE STRING
                 "Installation directory for dependencies")
 
-IF(INSTALL_DEPENDENCIES)
+IF(${INSTALL_DEPENDENCIES})
   # Install dependencies and exit
   project(INSTALL_DEPENDENCIES NONE)
   include(cmake/InstallDependencies.cmake)

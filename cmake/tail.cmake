@@ -20,7 +20,7 @@ target_compile_definitions(
   PUBLIC -DREPETITIONS=${REPETITIONS}
   )
 
-target_link_libraries(${TESTNAME} PUBLIC support ${SUPPORT_LIBS})
+target_link_libraries(${TESTNAME} PUBLIC support-${TARGET_ARCH} ${SUPPORT_LIBS})
 
 # Add correct linker script depending on section allocations
 IF(${TARGET_ARCH} STREQUAL "msp430")
