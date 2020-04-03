@@ -5,11 +5,16 @@ language: cpp
 install:
   - pip install --user cmake
 
+env:
+  - ARM_GCC_ROOT=${HOME}/.local/arm-gcc \
+    MSP430_GCC_ROOT=${HOME}/.local/msp430-gcc \
+    MSP430_INC=${HOME}/.local/msp430-inc
+
 script:
-  - cmake -Bbuild . -DINSTALL_DEPENDENCIES=ON
+  - cmake -Bbuild . -DINSTALL_DEPENDENCIES=ON -DSIMULATION=OFF
   - cmake --build build -- -j2
   - cmake -Bbuild -DINSTALL_DEPENDENCIES=OFF -DTARGET_ARCH=cm0
   - cmake --build build -- -j2
   - rm -rf build
-  - cmake -Bbuild -DINSTALL_DEPENDENCIES=OFF -DTARGET_ARCH=msp430
+  - cmake -Bbuild -DTARGET_ARCH=msp430 -DSIMULATION=OFF
   - cmake --build build -- -j2
