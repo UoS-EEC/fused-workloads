@@ -1,0 +1,15 @@
+dist: bionic
+sudo: false
+language: cpp
+
+install:
+  - pip install --user cmake
+
+script:
+  - cmake -Bbuild . -DINSTALL_DEPENDENCIES=ON
+  - cmake --build build -- -j2
+  - cmake -Bbuild -DINSTALL_DEPENDENCIES=OFF -DTARGET_ARCH=cm0
+  - cmake --build build -- -j2
+  - rm -rf build
+  - cmake -Bbuild -DINSTALL_DEPENDENCIES=OFF -DTARGET_ARCH=msp430
+  - cmake --build build -- -j2
