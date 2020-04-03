@@ -13,6 +13,7 @@ GTAGS
 *.bmp
 *.wmf
 
+
 # Latex
 build
 *.aux
@@ -55,8 +56,6 @@ build
 *_pch.h.cpp
 *_resource.rc
 *.qm
-.#*
-*.*#
 core
 !core/
 tags
