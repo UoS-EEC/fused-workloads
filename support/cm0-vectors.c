@@ -25,9 +25,8 @@
  * Copyright (c) 2020 University of Southampton.
  */
 
-#include <fused.h>
-#include "cm0-support.h"
 #include "cm0.h"
+#include "support.h"
 
 /*----------------------------------------------------------------------------
   External References
@@ -133,7 +132,9 @@ __NO_RETURN void Reset_Handler(void) {
   // point) */
   extern int main();
   main();
+#ifdef SIMULATION
   SIMPLE_MONITOR = SIMPLE_MONITOR_SW_ERROR;
+#endif
   while (1)  // Should never get here
     ;
 }
@@ -142,7 +143,9 @@ __NO_RETURN void Reset_Handler(void) {
   Hard Fault Handler
  *----------------------------------------------------------------------------*/
 void HardFault_Handler(void) {
+#ifdef SIMULATION
   SIMPLE_MONITOR = SIMPLE_MONITOR_SW_ERROR;
+#endif
   while (1)
     ;
 }
@@ -151,7 +154,9 @@ void HardFault_Handler(void) {
   Default Handler for Exceptions / Interrupts
  *----------------------------------------------------------------------------*/
 void Default_Handler(void) {
+#ifdef SIMULATION
   SIMPLE_MONITOR = SIMPLE_MONITOR_SW_ERROR;
+#endif
   while (1)
     ;
 }
