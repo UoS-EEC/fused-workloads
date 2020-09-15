@@ -16,6 +16,7 @@
 #error Target architecture must be defined
 #endif
 
+#include <fused.h>
 #include <stdbool.h>
 #include <stdint.h>
 
