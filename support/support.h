@@ -16,7 +16,9 @@
 #error Target architecture must be defined
 #endif
 
+#ifdef SIMULATION
 #include <fused.h>
+#endif
 #include <stdbool.h>
 #include <stdint.h>
 
